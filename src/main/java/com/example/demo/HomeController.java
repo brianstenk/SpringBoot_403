@@ -6,7 +6,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 public class HomeController {
@@ -30,4 +33,31 @@ public class HomeController {
         }
         return "index";
     }
+
+    @Autowired
+    UserRepository userRepository;
+
+    @RequestMapping("/")
+    public  String index(){
+        return "index";
+    }
+
+    @RequestMapping("/login")
+    public String login(){
+        return "login";
+    }
+    //implementing role based permission
+
+    //@RequestMapping("/admin")
+ /*   public String admin(){
+        return "admin";
+    }*/
+    @RequestMapping("/secure")
+    public String secure(Principal principal, Model model){
+        //@AUtowiring not applicable for a local scope
+        String username = principal.getName();
+        model.addAttribute("user", userRepository.findByUsername(username));
+        return "secure";
+    }
+
 }
